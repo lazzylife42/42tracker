@@ -1,0 +1,21 @@
+services:
+  fastapi:
+    build: .
+    ports:
+      - "9080:80"
+    depends_on:
+      - db
+    restart: "unless-stopped"
+
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=posgres_db
+      - POSTGRES_USER=${POSGRES_USER}
+      - POSTGRES_PASSWORD=${POSGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: "unless-stopped"
+
+volumes:
+  db_data:
