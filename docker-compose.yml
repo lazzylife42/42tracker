@@ -1,21 +1,47 @@
 services:
   fastapi:
     build: .
+    restart: "unless-stopped"
     ports:
       - "9080:80"
     depends_on:
       - db
-    restart: "unless-stopped"
+    networks:
+      - network
 
   db:
     image: postgres:16
+    restart: "unless-stopped"
     environment:
-      - POSTGRES_DB=posgres_db
-      - POSTGRES_USER=${POSGRES_USER}
-      - POSTGRES_PASSWORD=${POSGRES_PASSWORD}
+      - POSTGRES_DB=postgres_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - network
+
+  pg_admin:
+    image: dpage/pgadmin4:latest
     restart: "unless-stopped"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "9081:80"
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - network
+    depends_on:
+      - db
 
 volumes:
   db_data:
+  pgadmin-data:
+
+networks:
+  network:
