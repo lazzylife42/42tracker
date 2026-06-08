@@ -53,7 +53,7 @@ docker compose up --build -d
 ```
 Backend   		: Python 3.11 · FastAPI · SQLAlchemy 2.0 · PostgreSQL 16
 Infra     		: Docker Compose · pgAdmin · Cloudflare Tunnel
-Intégrations		: API 42 Intranet (OAuth2) · LeetCode GraphQL (à venir)
+Intégrations 	: API 42 Intranet (OAuth2) · LeetCode GraphQL (à venir)
 Frontend  		: React + Tailwind (à venir)
 iOS       		: SwiftUI (à venir)
 ```
@@ -140,9 +140,9 @@ DB object  →  Pydantic (sérialisation)      →  HTTP JSON (réponse)
 
 Pattern recommandé avec plusieurs classes selon l'usage :
 ```python
-class ProjectBase(BaseModel):      	# champs communs
-class ProjectResponse(ProjectBase): 	# GET — ajoute id + from_attributes
-class ProjectUpdate(BaseModel):     	# PATCH — tous les champs optionnels
+class ProjectBase(BaseModel):      # champs communs
+class ProjectResponse(ProjectBase): # GET — ajoute id + from_attributes
+class ProjectUpdate(BaseModel):     # PATCH — tous les champs optionnels
 ```
 
 `ProjectUpdate` n'hérite pas de `ProjectBase` — dans un PATCH on veut pouvoir envoyer un seul champ sans que les autres soient requis.
@@ -158,7 +158,7 @@ class ProjectUpdate(BaseModel):     	# PATCH — tous les champs optionnels
 async def lifespan(app: FastAPI):
     models.BASE.metadata.create_all(bind=engine)  # startup
     yield
-    engine.dispose()                              # shutdown — ferme le pool
+    engine.dispose()                               # shutdown — ferme le pool
 ```
 
 Sans `lifespan`, `create_all` tournait au niveau module — avant qu'uvicorn soit prêt et avant que la DB soit up. Résultat : crash au démarrage si postgres n'était pas encore prêt.
@@ -253,4 +253,3 @@ FT_USER=smonte-e
 FT_CLIENT_ID=
 FT_CLIENT_SECRET=
 ```
-
