@@ -5,11 +5,21 @@ from typing import Annotated
 from database import engine, SessionLocal
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+from contextlib import asynccontextmanager
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-models.BASE.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Starting up -- creating tables")
+    models.BASE.metadata.create_all(bind=engine)
+    logger.info("Tables created -- app ready")
+    yield
+    logger.info("Shutting down -- disposing engine")
+    engine.dispose()
+
+app = FastAPI(lifespan=lifespan)
 
 def get_db():
 	db = SessionLocal()
