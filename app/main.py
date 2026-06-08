@@ -4,6 +4,7 @@ import schemas
 from fastapi import FastAPI, HTTPException, Depends
 from typing import Annotated
 from database import engine, SessionLocal
+from sync import sync_projects
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
@@ -46,3 +47,7 @@ async def health_check(db: db_dependency):
 async def get_projects(db: db_dependency):
 	projets = db.query(models.Projects_42).all()
 	return projets
+
+@app.get("/api/42/sync")
+async def sync_42(db: db_dependency):
+    return sync_projects(db)
