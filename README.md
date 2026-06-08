@@ -140,7 +140,7 @@ DB object  →  Pydantic (sérialisation)      →  HTTP JSON (réponse)
 
 Pattern recommandé avec plusieurs classes selon l'usage :
 ```python
-class ProjectBase(BaseModel):      # champs communs
+class ProjectBase(BaseModel):      	# champs communs
 class ProjectResponse(ProjectBase): # GET — ajoute id + from_attributes
 class ProjectUpdate(BaseModel):     # PATCH — tous les champs optionnels
 ```
@@ -158,7 +158,7 @@ class ProjectUpdate(BaseModel):     # PATCH — tous les champs optionnels
 async def lifespan(app: FastAPI):
     models.BASE.metadata.create_all(bind=engine)  # startup
     yield
-    engine.dispose()                               # shutdown — ferme le pool
+    engine.dispose()                              # shutdown — ferme le pool
 ```
 
 Sans `lifespan`, `create_all` tournait au niveau module — avant qu'uvicorn soit prêt et avant que la DB soit up. Résultat : crash au démarrage si postgres n'était pas encore prêt.
