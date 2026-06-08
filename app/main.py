@@ -42,7 +42,6 @@ async def health_check(db: db_dependency):
 		logger.error(f"Database unreachable: {e}")
 		raise HTTPException(status_code=500, detail="Database unreachable")
 	
-
 @app.get("/api/projects/", response_model=list[schemas.ProjectResponse])
 async def get_projects(db: db_dependency):
 	projets = db.query(models.Projects_42).all()

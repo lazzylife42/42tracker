@@ -10,15 +10,15 @@ from models import (
 class ProjectBase(BaseModel):
 	name: str
 	slug: str | None = None
-	xp: int
-	bloc: BlocEnum
+	xp: int | None = None
+	bloc: BlocEnum | None = None
 	status: ProjectStatusEnum
 	mark: int | None = None
 	validated: bool | None = None
 	validated_at: datetime | None = None
 	retriable_at: datetime | None = None
-	estimated_weeks: int
-	order_priority: int
+	estimated_weeks: int | None = None
+	order_priority: int | None = None
 
 	model_config = {
 		"from_attributes": True,
