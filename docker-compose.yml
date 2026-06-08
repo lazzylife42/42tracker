@@ -2,10 +2,14 @@ services:
   fastapi:
     build: .
     restart: "unless-stopped"
+    env_file:
+      - .env
     ports:
       - "9080:80"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
     networks:
       - network
 
@@ -16,12 +20,16 @@ services:
       - POSTGRES_DB=postgres_db
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
       - network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
 
   pg_admin:
     image: dpage/pgadmin4:latest
@@ -37,7 +45,9 @@ services:
     networks:
       - network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
 
 volumes:
   db_data:
