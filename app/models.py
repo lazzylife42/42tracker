@@ -1,5 +1,5 @@
 from enum import Enum as PyEnum
-from sqlalchemy import Column, Enum, Integer, Float, String, DateTime
+from sqlalchemy import Column, Enum, Boolean, Integer, Float, String, DateTime
 from database import BASE
 
 # PROJECT 42
@@ -21,7 +21,9 @@ class Projects_42(BASE):
 	bloc = Column(Enum(BlocEnum), nullable=False)
 	status = Column(Enum(ProjectStatusEnum))
 	mark = Column(Integer)
+	validated = Column(Boolean, nullable=True)
 	validated_at = Column(DateTime)
+	retriable_at = Column(DateTime, nullable=True)
 	estimated_weeks = Column(Integer)
 	order_priority = Column(Integer)
 
