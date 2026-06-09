@@ -6,6 +6,7 @@ from database import BASE
 class BlocEnum(PyEnum):
 	ai = "AI"
 	db = "DB"
+	common_core = "Common Core"
 
 class ProjectStatusEnum(PyEnum):
 	todo = "todo"
@@ -16,10 +17,10 @@ class Projects_42(BASE):
 	__tablename__ = "projects_42"
 	id = Column(Integer, primary_key=True, index=True)
 	name = Column(String, nullable=False)
-	slug = Column(String)
+	slug = Column(String, nullable=False, unique=True)
 	xp = Column(Integer)
 	bloc = Column(Enum(BlocEnum))
-	status = Column(Enum(ProjectStatusEnum))
+	status = Column(Enum(ProjectStatusEnum), nullable=False)
 	mark = Column(Integer)
 	validated = Column(Boolean)
 	validated_at = Column(DateTime)
@@ -37,7 +38,7 @@ class LeetCode(BASE):
 	hard_solved = Column(Integer)
 	total_solved = Column(Integer)
 	streak = Column(Integer)
-	synced_at = Column(DateTime)
+	synced_at = Column(DateTime, nullable=False)
 
 # LEETCODE PATTERNS
 class PatternsEnum(PyEnum):
@@ -48,15 +49,16 @@ class PatternsEnum(PyEnum):
 	binary_search = "Binary Search"
 	linked_list = "Linked List"
 	trees = "Trees"
-	graphes_p = "GraphsP"
+	graphes = "Graphs"
 	heaps = "Heaps"
+	dynamic_programming = "Dynamic Programming"
 
 class LeetCodePatterns(BASE):
 	__tablename__ = "leetcode_patterns"
 	id = Column(Integer, primary_key=True, index=True)
 	pattern_name = Column(Enum(PatternsEnum), nullable=False)
-	target_count = Column(Integer)
-	solved_count = Column(Integer)
+	target_count = Column(Integer, nullable=False, default=0)
+	solved_count = Column(Integer, nullable=False, default=0)
 
 # SKILS GAP
 class CategoryEnum(PyEnum):
@@ -77,13 +79,13 @@ class SkillsGap(BASE):
 	id = Column(Integer, primary_key=True, index=True)
 	name = Column(String, nullable=False)
 	category = Column(Enum(CategoryEnum), nullable=False)
-	status = Column(Enum(SkillsGapStatusEnum))
+	status = Column(Enum(SkillsGapStatusEnum), nullable=False, default=SkillsGapStatusEnum.todo)
 	notes = Column(String)
 	updated_at = Column(DateTime)
 
 # WORK SESSIONS
 class SkillTypeEnum(PyEnum):
-	leetcode = "Leet Code"
+	leet_code = "Leet Code"
 	project_42 = "42 Project"
 	reading = "Reading"
 	mock_interview = "Mock Interview"
@@ -124,7 +126,7 @@ class Contacts(BASE):
 class ReadinessSnapshots(BASE):
 	__tablename__ = "readiness_snapshots"
 	id = Column(Integer, primary_key=True, index=True)
-	computed_at = Column(DateTime)
+	computed_at = Column(DateTime, nullable=False)
 	rncp_ai_pct = Column(Float)
 	rncp_db_pct = Column(Float)
 	leetcode_pct = Column(Float)
