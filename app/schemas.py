@@ -17,7 +17,7 @@ class ProjectBase(BaseModel):
 	validated: bool | None = None
 	validated_at: datetime | None = None
 	retriable_at: datetime | None = None
-	estimated_weeks: int | None = None
+	estimated_hours: int | None = None
 	order_priority: int | None = None
 
 	model_config = {
@@ -33,7 +33,7 @@ class ProjectBase(BaseModel):
 					"status":"done",
 					"mark": 103,
 					"validated_at": "2026-06-08T15:18:00+02:00",
-					"estimated_weeks": 1,
+					"estimated_hours": 1,
 					"order_priority": 999
 				}
 			]

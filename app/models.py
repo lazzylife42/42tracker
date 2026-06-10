@@ -25,7 +25,7 @@ class Projects_42(BASE):
 	validated = Column(Boolean)
 	validated_at = Column(DateTime)
 	retriable_at = Column(DateTime)
-	estimated_weeks = Column(Integer)
+	estimated_hours = Column(Integer)
 	order_priority = Column(Integer)
 
 # LEETCODE STATS
