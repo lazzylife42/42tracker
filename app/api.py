@@ -1,12 +1,13 @@
 import os
 import httpx
 import logging
+import time
 from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 class Api42():
@@ -48,6 +49,8 @@ class Api42():
 		header = {"Authorization": f"Bearer {self.get_token()}"}
 		try:
 			r = self.client.get(url=url, headers=header)
+			logger.debug(f"Response status: {r.status_code}")
+			logger.debug(f"Response text: {r.text[:200]}")
 			return r.json()
 		except Exception as e:
 			logger.error(f"Request failed:\n{e}")
@@ -57,14 +60,24 @@ class Api42():
 		return self._request(url=f"{self.BASE_URL}/users/{self.FT_USER}")
 
 	def get_projects_users(self):
-		return self._request(url=f"{self.BASE_URL}/users/{self.FT_USER}/projects_users")
+		page = 1
+		projects = []
+		while True:
+			url = f"{self.BASE_URL}/users/{self.FT_USER}/projects_users?per_page=100&page={page}"
+			r = self._request(url=url)
+			if not r:
+				break
+			projects.extend(r)
+			page += 1
+			time.sleep(0.6)
+		return projects
 
 	
 if __name__ == "__main__":
-    import json
-    api = Api42()
-    token = api.get_token()
-    user = api.get_user()
-    projects = api.get_projects_users()
-    print(json.dumps(user, indent=2))
-    print(json.dumps(projects[:2], indent=2))
+	import json
+	api = Api42()
+	token = api.get_token()
+	user = api.get_user()
+	projects = api.get_projects_users()
+	print(json.dumps(user, indent=2))
+	print(json.dumps(projects[:2], indent=2))
